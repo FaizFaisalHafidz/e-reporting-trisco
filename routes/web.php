@@ -144,6 +144,33 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::delete('/{report}', [App\Http\Controllers\Admin\InputReportController::class, 'destroy'])->name('destroy');
         });
 
+        // Admin Reports Routes
+        Route::prefix('admin/reports')->name('admin.reports.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('index');
+            Route::get('/all', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('all');
+            Route::get('/export', [App\Http\Controllers\Admin\AdminReportController::class, 'export'])->name('export');
+            Route::get('/{report}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('show');
+            Route::delete('/{report}', [App\Http\Controllers\Admin\AdminReportController::class, 'destroy'])->name('destroy');
+        });
+
+        // Admin Validation Routes
+        Route::prefix('admin/validation')->name('admin.validation.')->group(function () {
+            Route::get('/pending', [App\Http\Controllers\Admin\ValidationController::class, 'pending'])->name('pending');
+            Route::get('/history', [App\Http\Controllers\Admin\ValidationController::class, 'history'])->name('history');
+            Route::get('/export', [App\Http\Controllers\Admin\ValidationController::class, 'export'])->name('export');
+            Route::get('/{report}', [App\Http\Controllers\Admin\ValidationController::class, 'show'])->name('show');
+            Route::post('/{report}/approve', [App\Http\Controllers\Admin\ValidationController::class, 'approve'])->name('approve');
+            Route::post('/{report}/reject', [App\Http\Controllers\Admin\ValidationController::class, 'reject'])->name('reject');
+            Route::post('/{report}/revision', [App\Http\Controllers\Admin\ValidationController::class, 'requestRevision'])->name('revision');
+        });
+
+        // Admin Monitoring Routes
+        Route::prefix('admin/monitoring')->name('admin.monitoring.')->group(function () {
+            Route::get('/dashboard', [App\Http\Controllers\Admin\MonitoringController::class, 'dashboard'])->name('dashboard');
+            Route::get('/team', [App\Http\Controllers\Admin\MonitoringController::class, 'team'])->name('team');
+            Route::get('/production', [App\Http\Controllers\Admin\MonitoringController::class, 'production'])->name('production');
+        });
+
         // Log Aktivitas Routes
         Route::prefix('admin/logs')->name('admin.logs.')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\LogController::class, 'index'])->name('index');

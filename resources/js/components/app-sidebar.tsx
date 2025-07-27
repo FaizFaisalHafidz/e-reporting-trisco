@@ -13,7 +13,6 @@ import {
     LayoutGrid,
     Settings,
     Shield,
-    TrendingUp,
     Users
 } from 'lucide-react';
 import AppLogo from './app-logo';
@@ -25,22 +24,17 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Input Laporan',
-        href: '/admin/input-reports',
-        icon: TrendingUp,
-    },
-    {
         title: 'Data Laporan',
         href: '/admin/reports',
         icon: FileText,
         items: [
             {
-                title: 'Semua Laporan',
-                href: '/admin/reports/all',
+                title: 'Input Laporan',
+                href: '/admin/input-reports',
             },
             {
-                title: 'Export Data',
-                href: '/admin/reports/export',
+                title: 'Semua Laporan',
+                href: '/admin/reports/all',
             },
         ],
     },
@@ -156,14 +150,14 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset" className="border-r border-slate-200">
-            <SidebarHeader className="bg-white border-b border-slate-200 p-4">
+        <Sidebar collapsible="icon" variant="inset" className="border-r border-slate-200/80 bg-white/95 backdrop-blur-sm">
+            <SidebarHeader className="bg-white/90 border-b border-slate-200/80 p-4 backdrop-blur-sm">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton 
                             size="lg" 
                             asChild
-                            className="hover:bg-slate-50 transition-all duration-200 rounded-xl p-3"
+                            className="hover:bg-slate-50/80 transition-all duration-300 rounded-xl p-3 group"
                         >
                             <Link href="/dashboard" prefetch>
                                 <AppLogo />
@@ -173,11 +167,11 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent className="bg-gradient-to-b from-white via-slate-50/50 to-white py-2">
+            <SidebarContent className="bg-gradient-to-b from-white/95 via-slate-50/30 to-white/95 py-2 backdrop-blur-sm">
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            <SidebarFooter className="bg-white border-t border-slate-200 p-2">
+            <SidebarFooter className="bg-white/90 border-t border-slate-200/80 p-2 backdrop-blur-sm">
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>

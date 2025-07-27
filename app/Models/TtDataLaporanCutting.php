@@ -72,6 +72,17 @@ class TtDataLaporanCutting extends Model
         'biaya_operasional' => 'decimal:2',
     ];
 
+    protected $attributes = [
+        'target_quantity_pcs' => 0,
+        'actual_quantity_pcs' => 0,
+        'efisiensi_cutting' => 0,
+        'fabric_utilization_percentage' => 0,
+        'durasi_menit' => 0,
+        'jumlah_defect' => 0,
+        'foto_hasil' => '[]',
+        'jenis_defect' => '[]',
+    ];
+
     // Relationships
     public function shift(): BelongsTo
     {

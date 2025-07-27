@@ -25,15 +25,12 @@ export function NavFooter({
                                 <SidebarMenuButton
                                     asChild
                                     className={cn(
-                                        "group relative w-full justify-start rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                        "before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-0 before:bg-slate-600 before:rounded-r-full before:transition-all before:duration-200",
+                                        "group relative w-full justify-start rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                                         isActiveItem ? [
-                                            "bg-gradient-to-r from-slate-600 to-slate-500 text-white shadow-md shadow-slate-500/20",
-                                            "before:h-6 before:bg-white/30",
-                                            "hover:from-slate-700 hover:to-slate-600"
+                                            "bg-gradient-to-r from-slate-700 to-slate-600 text-white shadow-lg shadow-slate-600/20",
+                                            "hover:from-slate-800 hover:to-slate-700"
                                         ] : [
-                                            "text-slate-600 hover:bg-slate-50 hover:text-slate-700",
-                                            "hover:before:h-4 hover:before:bg-slate-600"
+                                            "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
                                         ]
                                     )}
                                 >
@@ -42,8 +39,8 @@ export function NavFooter({
                                             <Icon 
                                                 iconNode={item.icon} 
                                                 className={cn(
-                                                    "h-4 w-4 transition-all duration-200",
-                                                    isActiveItem ? "text-white" : "text-slate-500 group-hover:text-slate-600"
+                                                    "h-4 w-4 transition-colors duration-200",
+                                                    isActiveItem ? "text-white" : "text-slate-400"
                                                 )} 
                                             />
                                         )}

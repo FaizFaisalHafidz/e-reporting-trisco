@@ -64,4 +64,20 @@ class User extends Authenticatable
     {
         return $query->where('is_active', false);
     }
+
+    /**
+     * Get validations done by this user
+     */
+    public function validations()
+    {
+        return $this->hasMany(TtDataValidasiLaporan::class, 'validator_id');
+    }
+
+    /**
+     * Get laporan cutting created by this user
+     */
+    public function laporanCutting()
+    {
+        return $this->hasMany(TtDataLaporanCutting::class, 'operator_id');
+    }
 }
