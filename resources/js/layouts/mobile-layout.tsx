@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { Bell, LogOut, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 
 interface User {
@@ -101,11 +101,11 @@ export default function MobileLayout({
                         </div>
                         
                         <div className="flex items-center space-x-2">
-                            <button className="p-2 rounded-full hover:bg-white/20 relative">
+                            {/* <button className="p-2 rounded-full hover:bg-white/20 relative">
                                 <Bell className="w-5 h-5 text-white" />
-                                {/* Notification badge */}
+                                
                                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full"></span>
-                            </button>
+                            </button> */}
                             
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">

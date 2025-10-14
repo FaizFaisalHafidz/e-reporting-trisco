@@ -150,7 +150,7 @@ export default function ReportShow({ report }: Props) {
 
     const calculateEfficiency = () => {
         if (report.target_quantity_pcs > 0) {
-            return ((report.actual_quantity_pcs / report.target_quantity_pcs) * 100).toFixed(1);
+            return Number(((report.actual_quantity_pcs / report.target_quantity_pcs) * 100)).toFixed(1);
         }
         return '0';
     };

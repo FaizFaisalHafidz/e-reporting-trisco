@@ -382,7 +382,7 @@ export default function ValidationPending({
                                                             </span>
                                                         </div>
                                                         <div className={`text-sm font-medium ${getEfficiencyColor(report.efisiensi_cutting || 0)}`}>
-                                                            {(report.efisiensi_cutting || 0).toFixed(1)}% efisiensi
+                                                            {Number(report.efisiensi_cutting || 0).toFixed(1)}% efisiensi
                                                         </div>
                                                     </div>
                                                 </TableCell>

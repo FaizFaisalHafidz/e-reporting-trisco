@@ -183,7 +183,7 @@ export default function DashboardOperator({
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-4 bg-blue-50 rounded-lg">
                             <p className="text-sm text-gray-600 mb-2">Rata-rata Efisiensi</p>
-                            <p className="text-2xl font-bold text-blue-600">{performanceStats.avgEfficiency.toFixed(1)}%</p>
+                            <p className="text-2xl font-bold text-blue-600">{Number(performanceStats.avgEfficiency || 0).toFixed(1)}%</p>
                         </div>
                         
                         <div className="p-4 bg-gray-50 rounded-lg">

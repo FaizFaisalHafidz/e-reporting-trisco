@@ -204,7 +204,7 @@ export default function ShowReport({ report, user }: Props) {
                                 <div className="text-sm text-gray-600">Actual / {report.target_quantity_pcs || 0} Target</div>
                             </div>
                             <div className="text-center p-3 bg-green-50 rounded-lg">
-                                <div className="text-lg font-bold text-green-600">{(report.efficiency_percentage || 0).toFixed(1)}%</div>
+                                <div className="text-lg font-bold text-green-600">{Number(report.efficiency_percentage || 0).toFixed(1)}%</div>
                                 <div className="text-xs text-gray-600">Efisiensi</div>
                             </div>
                         </div>
@@ -306,7 +306,7 @@ export default function ShowReport({ report, user }: Props) {
                         
                         <div className="p-3 bg-blue-50 rounded-lg">
                             <div className="text-sm font-medium text-blue-800 mb-1">Total Area</div>
-                            <div className="text-lg font-bold text-blue-900">{(report.total_area_m2 || 0).toFixed(2)} m²</div>
+                            <div className="text-lg font-bold text-blue-900">{Number(report.total_area_m2 || 0).toFixed(2)} m²</div>
                         </div>
                     </CardContent>
                 </Card>

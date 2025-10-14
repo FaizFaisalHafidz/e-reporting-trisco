@@ -502,7 +502,7 @@ export default function ValidationShow({ report }: Props) {
                                     </div>
                                     <div className="text-center p-4 bg-purple-50 rounded-lg">
                                         <div className="text-2xl font-bold text-purple-600">
-                                            {(report.efisiensi_cutting || 0).toFixed(1)}%
+                                            {Number(report.efisiensi_cutting || 0).toFixed(1)}%
                                         </div>
                                         <div className="text-sm text-purple-700">Efisiensi</div>
                                     </div>

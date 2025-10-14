@@ -230,9 +230,9 @@ export default function ReportsIndex({ reports, user }: Props) {
                                                 <User className="w-4 h-4 mr-2" />
                                                 <span>{report.actual_quantity_pcs || 0}/{report.target_quantity_pcs || 0} pcs</span>
                                             </div>
-                                            <div className={`font-medium ${(report.efisiensi_cutting || 0) >= 90 ? 'text-green-600' : 
-                                                (report.efisiensi_cutting || 0) >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
-                                                {(report.efisiensi_cutting || 0).toFixed(1)}%
+                                            <div className={`font-medium ${Number(report.efisiensi_cutting || 0) >= 90 ? 'text-green-600' : 
+                                                Number(report.efisiensi_cutting || 0) >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                                {Number(report.efisiensi_cutting || 0).toFixed(1)}%
                                             </div>
                                         </div>
                                         

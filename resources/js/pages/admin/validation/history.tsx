@@ -405,7 +405,7 @@ export default function ValidationHistory({
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className={`font-medium ${getEfficiencyColor(record.laporan?.efisiensi_cutting)}`}>
-                                                        {(record.laporan?.efisiensi_cutting || 0).toFixed(1)}%
+                                                        {Number(record.laporan?.efisiensi_cutting || 0).toFixed(1)}%
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
