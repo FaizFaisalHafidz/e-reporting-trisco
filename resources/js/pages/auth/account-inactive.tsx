@@ -13,7 +13,7 @@ export default function AccountInactive() {
                         {/* Logo */}
                         <div className="mb-6">
                             <img 
-                                src="https://neoflash.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png" 
+                                src="https://tugasbro.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png" 
                                 alt="TRISCO Logo" 
                                 className="h-16 mx-auto object-contain"
                             />

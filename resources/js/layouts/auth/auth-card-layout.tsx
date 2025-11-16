@@ -16,9 +16,9 @@ export default function AuthCardLayout({
             <div className="flex w-full max-w-md flex-col gap-6">
                 <Link href={route('home')} className="flex items-center gap-3 self-center font-medium">
                     <div className="flex flex-col items-center gap-4">
-                        <img 
-                            src="https://neoflash.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png"
-                            alt="TRISCO Logo"
+                        <img
+                            src="https://tugasbro.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png"
+                            alt="Trisco Logo"
                             className="h-20 w-auto object-contain"
                         />
                         <div className="text-center">

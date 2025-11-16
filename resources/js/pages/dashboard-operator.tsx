@@ -89,9 +89,9 @@ export default function DashboardOperator({
                             <p className="text-blue-100 mb-2">{user.name}</p>
                             <p className="text-blue-200 text-sm">{currentDate}</p>
                         </div>
-                        <img 
-                            src="https://neoflash.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png"
-                            alt="TRISCO Logo"
+                        <img
+                            src="https://tugasbro.sgp1.cdn.digitaloceanspaces.com/logo-trisco.png"
+                            alt="Trisco Logo"
                             className="h-12 w-auto object-contain opacity-80"
                         />
                     </div>
