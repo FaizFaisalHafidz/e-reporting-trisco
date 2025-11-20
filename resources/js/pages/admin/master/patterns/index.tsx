@@ -16,13 +16,15 @@ interface Pattern {
     id: number;
     kode_pattern: string;
     nama_pattern: string;
-    kategori_produk: 'kemeja' | 'celana' | 'dress' | 'jaket' | 'rok' | 'lainnya';
-    ukuran_tersedia: string[];
-    tingkat_kesulitan: 'mudah' | 'sedang' | 'sulit' | 'sangat_sulit';
-    estimasi_waktu_cutting_menit: number;
-    keterangan: string;
-    gambar_pattern: string;
-    status: 'aktif' | 'non_aktif' | 'draft';
+    kategori_produk: string;
+    size_range?: string;
+    panjang_pattern_cm?: number;
+    lebar_pattern_cm?: number;
+    fabric_consumption_yard?: number;
+    size_breakdown?: string[];
+    instruksi_cutting?: string;
+    difficulty_level: 'easy' | 'medium' | 'hard';
+    status: 'aktif' | 'non_aktif' | 'archived';
     created_at: string;
     updated_at: string;
 }
@@ -30,8 +32,8 @@ interface Pattern {
 interface Stats {
     total_patterns: number;
     active_patterns: number;
-    draft_patterns: number;
-    avg_cutting_time: number;
+    total_categories: number;
+    avg_consumption: number;
 }
 
 interface Props {
@@ -47,13 +49,15 @@ export default function PatternsIndex({ patterns, stats }: Props) {
     const { data, setData, post, put, delete: destroy, processing, errors, reset } = useForm({
         kode_pattern: '',
         nama_pattern: '',
-        kategori_produk: 'kemeja' as 'kemeja' | 'celana' | 'dress' | 'jaket' | 'rok' | 'lainnya',
-        ukuran_tersedia: [] as string[],
-        tingkat_kesulitan: 'sedang' as 'mudah' | 'sedang' | 'sulit' | 'sangat_sulit',
-        estimasi_waktu_cutting_menit: 60,
-        keterangan: '',
-        gambar_pattern: '',
-        status: 'aktif' as 'aktif' | 'non_aktif' | 'draft',
+        kategori_produk: '',
+        size_range: '',
+        panjang_pattern_cm: 0,
+        lebar_pattern_cm: 0,
+        fabric_consumption_yard: 0,
+        size_breakdown: [] as string[],
+        instruksi_cutting: '',
+        difficulty_level: 'medium' as 'easy' | 'medium' | 'hard',
+        status: 'aktif' as 'aktif' | 'non_aktif' | 'archived',
     });
 
     const ukuranOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
@@ -92,11 +96,13 @@ export default function PatternsIndex({ patterns, stats }: Props) {
         setData('kode_pattern', pattern.kode_pattern);
         setData('nama_pattern', pattern.nama_pattern);
         setData('kategori_produk', pattern.kategori_produk);
-        setData('ukuran_tersedia', pattern.ukuran_tersedia || []);
-        setData('tingkat_kesulitan', pattern.tingkat_kesulitan);
-        setData('estimasi_waktu_cutting_menit', pattern.estimasi_waktu_cutting_menit);
-        setData('keterangan', pattern.keterangan || '');
-        setData('gambar_pattern', pattern.gambar_pattern || '');
+        setData('size_range', pattern.size_range || '');
+        setData('panjang_pattern_cm', pattern.panjang_pattern_cm || 0);
+        setData('lebar_pattern_cm', pattern.lebar_pattern_cm || 0);
+        setData('fabric_consumption_yard', pattern.fabric_consumption_yard || 0);
+        setData('size_breakdown', pattern.size_breakdown || []);
+        setData('instruksi_cutting', pattern.instruksi_cutting || '');
+        setData('difficulty_level', pattern.difficulty_level);
         setData('status', pattern.status);
         setIsEditOpen(true);
     };
@@ -112,41 +118,30 @@ export default function PatternsIndex({ patterns, stats }: Props) {
     };
 
     const toggleUkuran = (ukuran: string) => {
-        const current = data.ukuran_tersedia;
+        const current = data.size_breakdown;
         if (current.includes(ukuran)) {
-            setData('ukuran_tersedia', current.filter(u => u !== ukuran));
+            setData('size_breakdown', current.filter(u => u !== ukuran));
         } else {
-            setData('ukuran_tersedia', [...current, ukuran]);
+            setData('size_breakdown', [...current, ukuran]);
         }
     };
 
     const getDifficultyColor = (difficulty: string) => {
         switch (difficulty) {
-            case 'mudah': return 'bg-green-100 text-green-800';
-            case 'sedang': return 'bg-yellow-100 text-yellow-800';
-            case 'sulit': return 'bg-orange-100 text-orange-800';
-            case 'sangat_sulit': return 'bg-red-100 text-red-800';
+            case 'easy': return 'bg-green-100 text-green-800';
+            case 'medium': return 'bg-yellow-100 text-yellow-800';
+            case 'hard': return 'bg-red-100 text-red-800';
             default: return '';
         }
     };
 
     const getDifficultyLabel = (difficulty: string) => {
         switch (difficulty) {
-            case 'mudah': return 'Mudah';
-            case 'sedang': return 'Sedang';
-            case 'sulit': return 'Sulit';
-            case 'sangat_sulit': return 'Sangat Sulit';
+            case 'easy': return 'Mudah';
+            case 'medium': return 'Sedang';
+            case 'hard': return 'Sulit';
             default: return difficulty;
         }
-    };
-
-    const formatTime = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        if (hours > 0) {
-            return `${hours}j ${mins}m`;
-        }
-        return `${mins}m`;
     };
 
     return (
@@ -195,21 +190,21 @@ export default function PatternsIndex({ patterns, stats }: Props) {
 
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Draft Pattern</CardTitle>
+                                <CardTitle className="text-sm font-medium">Total Kategori</CardTitle>
                                 <Layers className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-yellow-600">{stats.draft_patterns}</div>
+                                <div className="text-2xl font-bold text-yellow-600">{stats.total_categories}</div>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Rata-rata Waktu Cutting</CardTitle>
+                                <CardTitle className="text-sm font-medium">Rata-rata Konsumsi Kain</CardTitle>
                                 <Clock className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-purple-600">{formatTime(Math.round(stats.avg_cutting_time || 0))}</div>
+                                <div className="text-2xl font-bold text-purple-600">{Number(stats.avg_consumption || 0).toFixed(2)} yd</div>
                             </CardContent>
                         </Card>
                     </div>
@@ -230,7 +225,7 @@ export default function PatternsIndex({ patterns, stats }: Props) {
                                         <TableHead>Kategori</TableHead>
                                         <TableHead>Ukuran Tersedia</TableHead>
                                         <TableHead>Tingkat Kesulitan</TableHead>
-                                        <TableHead>Estimasi Waktu</TableHead>
+                                        <TableHead>Size Range</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-right">Aksi</TableHead>
                                     </TableRow>
@@ -251,39 +246,36 @@ export default function PatternsIndex({ patterns, stats }: Props) {
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex flex-wrap gap-1">
-                                                    {pattern.ukuran_tersedia?.slice(0, 3).map((ukuran) => (
+                                                    {pattern.size_breakdown?.slice(0, 3).map((ukuran: string) => (
                                                         <Badge key={ukuran} variant="secondary" className="text-xs">
                                                             {ukuran}
                                                         </Badge>
                                                     ))}
-                                                    {pattern.ukuran_tersedia?.length > 3 && (
+                                                    {(pattern.size_breakdown?.length ?? 0) > 3 && (
                                                         <Badge variant="secondary" className="text-xs">
-                                                            +{pattern.ukuran_tersedia.length - 3}
+                                                            +{(pattern.size_breakdown?.length ?? 0) - 3}
                                                         </Badge>
                                                     )}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge className={getDifficultyColor(pattern.tingkat_kesulitan)}>
-                                                    {getDifficultyLabel(pattern.tingkat_kesulitan)}
+                                                <Badge className={getDifficultyColor(pattern.difficulty_level)}>
+                                                    {getDifficultyLabel(pattern.difficulty_level)}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <div className="flex items-center gap-1">
-                                                    <Clock className="w-3 h-3" />
-                                                    <span className="text-sm">{formatTime(pattern.estimasi_waktu_cutting_menit)}</span>
-                                                </div>
+                                                <span className="text-sm">{pattern.size_range || '-'}</span>
                                             </TableCell>
                                             <TableCell>
                                                 <Badge 
                                                     variant={pattern.status === 'aktif' ? 'default' : 'secondary'}
                                                     className={
                                                         pattern.status === 'aktif' ? 'bg-green-100 text-green-800' :
-                                                        pattern.status === 'draft' ? 'bg-yellow-100 text-yellow-800' : ''
+                                                        pattern.status === 'archived' ? 'bg-yellow-100 text-yellow-800' : ''
                                                     }
                                                 >
                                                     {pattern.status === 'aktif' ? 'Aktif' : 
-                                                     pattern.status === 'draft' ? 'Draft' : 'Non Aktif'}
+                                                     pattern.status === 'archived' ? 'Archived' : 'Non Aktif'}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="text-right">
@@ -384,22 +376,22 @@ export default function PatternsIndex({ patterns, stats }: Props) {
 
                                     <div>
                                         <Label htmlFor="status">Status *</Label>
-                                        <Select value={data.status} onValueChange={(value: 'aktif' | 'non_aktif' | 'draft') => setData('status', value)}>
+                                        <Select value={data.status} onValueChange={(value: 'aktif' | 'non_aktif' | 'archived') => setData('status', value)}>
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="aktif">Aktif</SelectItem>
-                                                <SelectItem value="draft">Draft</SelectItem>
                                                 <SelectItem value="non_aktif">Non Aktif</SelectItem>
+                                                <SelectItem value="archived">Archived</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
                                 </div>
 
-                                {/* Ukuran Tersedia */}
+                                {/* Size Breakdown */}
                                 <div>
-                                    <Label>Ukuran Tersedia *</Label>
+                                    <Label>Ukuran Tersedia</Label>
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {ukuranOptions.map((ukuran) => (
                                             <button
@@ -407,7 +399,7 @@ export default function PatternsIndex({ patterns, stats }: Props) {
                                                 type="button"
                                                 onClick={() => toggleUkuran(ukuran)}
                                                 className={`px-3 py-1 rounded-md border text-sm ${
-                                                    data.ukuran_tersedia.includes(ukuran)
+                                                    data.size_breakdown.includes(ukuran)
                                                         ? 'bg-blue-600 text-white border-blue-600'
                                                         : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                                                 }`}
@@ -416,58 +408,85 @@ export default function PatternsIndex({ patterns, stats }: Props) {
                                             </button>
                                         ))}
                                     </div>
-                                    {errors.ukuran_tersedia && <p className="text-red-500 text-sm">{errors.ukuran_tersedia}</p>}
+                                    {errors.size_breakdown && <p className="text-red-500 text-sm">{errors.size_breakdown}</p>}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <Label htmlFor="tingkat_kesulitan">Tingkat Kesulitan *</Label>
+                                        <Label htmlFor="difficulty_level">Tingkat Kesulitan *</Label>
                                         <Select 
-                                            value={data.tingkat_kesulitan} 
-                                            onValueChange={(value: 'mudah' | 'sedang' | 'sulit' | 'sangat_sulit') => setData('tingkat_kesulitan', value)}
+                                            value={data.difficulty_level} 
+                                            onValueChange={(value: 'easy' | 'medium' | 'hard') => setData('difficulty_level', value)}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="mudah">Mudah</SelectItem>
-                                                <SelectItem value="sedang">Sedang</SelectItem>
-                                                <SelectItem value="sulit">Sulit</SelectItem>
-                                                <SelectItem value="sangat_sulit">Sangat Sulit</SelectItem>
+                                                <SelectItem value="easy">Mudah</SelectItem>
+                                                <SelectItem value="medium">Sedang</SelectItem>
+                                                <SelectItem value="hard">Sulit</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
 
                                     <div>
-                                        <Label htmlFor="estimasi_waktu_cutting_menit">Estimasi Waktu Cutting (Menit) *</Label>
+                                        <Label htmlFor="size_range">Size Range</Label>
                                         <Input
-                                            id="estimasi_waktu_cutting_menit"
-                                            type="number"
-                                            value={data.estimasi_waktu_cutting_menit}
-                                            onChange={(e) => setData('estimasi_waktu_cutting_menit', parseInt(e.target.value) || 0)}
-                                            placeholder="60"
+                                            id="size_range"
+                                            value={data.size_range}
+                                            onChange={(e) => setData('size_range', e.target.value)}
+                                            placeholder="S-XL, 28-34, dll"
                                         />
-                                        {errors.estimasi_waktu_cutting_menit && <p className="text-red-500 text-sm">{errors.estimasi_waktu_cutting_menit}</p>}
+                                        {errors.size_range && <p className="text-red-500 text-sm">{errors.size_range}</p>}
+                                    </div>
+                                </div>
+
+                                {/* Pattern Measurements */}
+                                <div className="grid grid-cols-3 gap-4">
+                                    <div>
+                                        <Label htmlFor="panjang_pattern_cm">Panjang (cm)</Label>
+                                        <Input
+                                            id="panjang_pattern_cm"
+                                            type="number"
+                                            step="0.01"
+                                            value={data.panjang_pattern_cm}
+                                            onChange={(e) => setData('panjang_pattern_cm', parseFloat(e.target.value) || 0)}
+                                            placeholder="0.00"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="lebar_pattern_cm">Lebar (cm)</Label>
+                                        <Input
+                                            id="lebar_pattern_cm"
+                                            type="number"
+                                            step="0.01"
+                                            value={data.lebar_pattern_cm}
+                                            onChange={(e) => setData('lebar_pattern_cm', parseFloat(e.target.value) || 0)}
+                                            placeholder="0.00"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="fabric_consumption_yard">Konsumsi Kain (yard)</Label>
+                                        <Input
+                                            id="fabric_consumption_yard"
+                                            type="number"
+                                            step="0.001"
+                                            value={data.fabric_consumption_yard}
+                                            onChange={(e) => setData('fabric_consumption_yard', parseFloat(e.target.value) || 0)}
+                                            placeholder="0.000"
+                                        />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="gambar_pattern">URL Gambar Pattern</Label>
-                                    <Input
-                                        id="gambar_pattern"
-                                        value={data.gambar_pattern}
-                                        onChange={(e) => setData('gambar_pattern', e.target.value)}
-                                        placeholder="https://example.com/pattern.jpg"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="keterangan">Keterangan</Label>
+                                    <Label htmlFor="instruksi_cutting">Instruksi Cutting</Label>
                                     <Textarea
-                                        id="keterangan"
-                                        value={data.keterangan}
-                                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setData('keterangan', e.target.value)}
-                                        placeholder="Keterangan atau instruksi khusus untuk pattern ini"
+                                        id="instruksi_cutting"
+                                        value={data.instruksi_cutting}
+                                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setData('instruksi_cutting', e.target.value)}
+                                        placeholder="Instruksi atau keterangan khusus untuk proses cutting"
                                         rows={3}
                                     />
                                 </div>
